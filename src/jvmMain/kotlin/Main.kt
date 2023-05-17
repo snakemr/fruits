@@ -2,7 +2,6 @@ import androidx.compose.ui.graphics.Color
 import fruits.*
 
 fun main() = mainUI { lesson, input ->
-    //Basket {
         when (lesson) {
             Lessons.About -> Basket { Apple() }
             Lessons.More -> Basket { Fruits.all.forEach { it() } }
@@ -50,5 +49,4 @@ fun main() = mainUI { lesson, input ->
             Lessons.Double -> Basket { (input + input).forEach { it() } }
             else -> {}
         }
-    //}
 }

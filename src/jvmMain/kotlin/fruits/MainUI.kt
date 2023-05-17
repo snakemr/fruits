@@ -19,9 +19,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -65,13 +69,36 @@ fun mainUI(app: @Composable (Lessons, List<Fruit>)->Unit) = application {
             } }, Modifier.fillMaxHeight().padding(start = 8.dp, top = 8.dp)) { Text("Запомнить в этом проекте") }
         }
         AnimatedVisibility(chapter == null && name != null, enter = slideInHorizontally { -it }, exit = slideOutHorizontally { -it }) {
-            LazyColumn {
-                items(Chapter.values) {
-                    Row(Modifier.fillMaxWidth().clickable { chapter = it }, verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.CheckCircle, "chapter", Modifier.padding(10.dp))
-                        Text(it.title, Modifier.padding(10.dp), Color.DarkGray, 16.sp)
+            val solutions by produceState(emptyMap()) {
+                value = solutions().groupBy { Lessons.of(it.lesson).chapter }.map { entry ->
+                    entry.key to (Lessons.values.count { it.chapter == entry.key } == entry.value.size)
+                }.toMap()
+            }
+            Box(Modifier.fillMaxSize()) {
+                LazyColumn(Modifier.align(Alignment.Center)) {
+                    item {
+                        Text(buildAnnotatedString {
+                            append("Работа ")
+                            withStyle(SpanStyle(textDecoration = TextDecoration.LineThrough)) { append("с фруктами") }
+                            append(" со списками на языке Kotlin")
+                        },  Modifier.width(500.dp).padding(bottom = 8.dp),
+                            Color.Gray, 20.sp, textAlign = TextAlign.Center
+                        )
                     }
-                    Divider()
+                    items(Chapter.values) {
+                        Card(Modifier.size(500.dp, 80.dp).padding(12.dp, 8.dp), RoundedCornerShape(10.dp), elevation = 8.dp) {
+                            Row(Modifier.clickable { chapter = it }, verticalAlignment = Alignment.CenterVertically) {
+                                Fruit.of(it.ordinal).out(Modifier.padding(start = 5.dp))
+                                Text(it.title, Modifier.weight(1f).padding(10.dp), Color.DarkGray, 16.sp)
+                                if (solutions[it] == true) Icon(Icons.Default.CheckCircle, null,
+                                    Modifier.padding(end = 10.dp), Color(0xFF008040))
+                            }
+                        }
+                    }
+                    item {
+                        Text("© Андрей Светличный, 2023", Modifier.width(500.dp).padding(top = 8.dp),
+                            Color.Gray, 16.sp, textAlign = TextAlign.Center)
+                    }
                 }
             }
         }
