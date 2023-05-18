@@ -17,7 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import kotlin.random.Random
 
-enum class Size { Big, Medium, Small }
+enum class Size { Tiny, Small, Compact, Long, Medium, Big }
 
 enum class Fruit(val file: String) {
     Apple("p1.jpg"),
@@ -37,8 +37,11 @@ enum class Fruit(val file: String) {
 
     val size get(): Size = when(this) {
         Watermelon -> Size.Big
-        Apple, Pear, Banana, Lemon, Nectarine -> Size.Medium
-        Strawberry, Cherry -> Size.Small
+        Apple, Pear -> Size.Medium
+        Banana -> Size.Long
+        Lemon, Nectarine -> Size.Compact
+        Strawberry -> Size.Small
+        Cherry -> Size.Tiny
     }
 
     @Composable

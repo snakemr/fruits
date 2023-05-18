@@ -10,7 +10,8 @@ fun main() = mainUI { lesson, input ->
                 Basket { Pear() ; Banana() ; Lemon() }
                 Basket { Apple() ; Watermelon() }
             }
-            Lessons.All -> Basket { for (fruit in Fruits.all) { fruit() } }
+            ///////
+            Lessons.AllFruits -> Basket { for (fruit in Fruits.all) { fruit() } }
             Lessons.Some -> Basket { for (fruit in input) { fruit() } }
             Lessons.SomeMore -> Basket { input.forEach { it() } }
             Lessons.Separate -> Store { input.forEach { Basket { it() } } }
@@ -22,6 +23,7 @@ fun main() = mainUI { lesson, input ->
                 Basket { repeat(4) { Lemon() } }
                 Basket { repeat(2) { Watermelon() } }
             }
+            ///////
             Lessons.Reversed -> Basket { input.reversed().forEach { it() } }
             Lessons.FirstLast -> Basket { input.first()() ; input.last()() }
             Lessons.TakeFirst -> Basket { input.take(5).forEach { it() } }
@@ -47,6 +49,22 @@ fun main() = mainUI { lesson, input ->
             Lessons.Add -> Basket { (input + Apple).forEach { it() } }
             Lessons.AddAll -> Basket { (input + List(8){ Cherry }).forEach { it() } }
             Lessons.Double -> Basket { (input + input).forEach { it() } }
+            ///////
+            Lessons.IsNotEmpty -> Basket { if (input.isNotEmpty()) Apple() else Nectarine() }
+            Lessons.CompSize -> Basket { if (input.size >= 5) Apple() else Nectarine() }
+            Lessons.CompFirst -> Basket { if (input.firstOrNull() != Banana) Apple() else Nectarine() }
+            Lessons.FirstLastColor -> Basket {
+                if (input.firstOrNull()?.color == input.lastOrNull()?.color) Apple() else Nectarine()
+            }
+            Lessons.Contains -> Basket { if (input.contains(Banana)) Apple() else Nectarine() }
+            Lessons.In -> Basket { if (Banana in input) Apple() else Nectarine() }
+            Lessons.Any -> Basket { if (input.any { it == Banana }) Apple() else Nectarine() }
+            Lessons.None -> Basket { if (input.none { it == Banana }) Apple() else Nectarine() }
+            Lessons.All -> Basket { if (input.all { it == Banana }) Apple() else Nectarine() }
+            Lessons.Count -> Basket { if (input.count { it == Banana } == 1) Apple() else Nectarine() }
+            Lessons.Yellow -> Basket { repeat (input.count { it.color == Color.Yellow }) { Apple() } }
+            Lessons.MinMax -> Basket { input.min()() ; input.max()() }
+            Lessons.MinMaxBy -> Basket { input.minBy { it.size }() ; input.maxBy { it.size }() }
             else -> {}
         }
 }

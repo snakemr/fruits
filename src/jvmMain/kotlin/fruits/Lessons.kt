@@ -13,7 +13,8 @@ import data.userName
 enum class Chapter(val title: String) {
     About("Введение"),
     Cycles("Циклы"),
-    Lists("Обработка списков")
+    Lists("Обработка списков"),
+    Conditions("Условия")
     ;
     companion object {
         val values: List<Chapter> = Chapter.values().toList()
@@ -43,7 +44,9 @@ enum class Lessons(
         withStyle(mono) { append("\nBasket { ... }") }
     }, size = 73),
 
-    All(Chapter.Cycles, "Все фрукты", { Triple(listOf(Fruits.all), emptyList(), "901234567") },
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    AllFruits(Chapter.Cycles, "Все фрукты", { Triple(listOf(Fruits.all), emptyList(), "901234567") },
         buildAnnotatedString {
             append("Положите в корзину все фрукты из полного набора Fruits.all, используя цикл for:")
             withStyle(mono) { append("\nfor (fruit in Fruits.all) { fruit() }") }
@@ -79,6 +82,8 @@ enum class Lessons(
             Triple(f, emptyList(), f.joinToString("") { it.ordinals("9") })
         }
     }, AnnotatedString("Разложите по разным корзинам 15 черешен, четыре лимона и два арбуза"), size = 55),
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     Reversed(Chapter.Lists, "Задом наперёд (reversed)", {
         Fruits.random(8).let { Triple(listOf(it), it.reversed(), it.ordinals("9")) }
@@ -183,7 +188,7 @@ enum class Lessons(
         Fruits.random(Random.nextInt(10,16)).let { f ->
             Triple(listOf(f.sortedByDescending { it.size }), f, f.sortedByDescending { it.size }.ordinals("9"))
         }
-    }, AnnotatedString("Отсортируйте фрукты в наборе по размеру в обратном порядке, сначала мелкие, в конце – крупные\n" +
+    }, AnnotatedString("Положите фрукты в корзину, чтобы они не подавились, сначала крупные, в конце – мелкие\n" +
             "(sortedByDescending, сравнивайте их it.size)"), 3, 55),
 
     Distinct(Chapter.Lists, "Всё по одной штучке, пожалуйста (distinct)", {
@@ -261,6 +266,126 @@ enum class Lessons(
     Double(Chapter.Lists, "Удвоить набор (+)", {
         Fruits.random(Random.nextInt(5,8)).let { Triple(listOf(it+it), it, (it+it).ordinals("9")) }
     }, AnnotatedString("Удвойте набор фруктов"), 3, 55),
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    IsNotEmpty(Chapter.Conditions,"Узнать, что набор не пуст (isNotEmpty)", {
+        Fruits.random(Random.nextInt(3)).let {
+            val c = if (it.isNotEmpty()) Apple else Nectarine
+            Triple(listOf(listOf(c)), it, "9${c.ordinal}")
+        }
+    }, buildAnnotatedString {
+        append("Если в исходном наборе есть фрукты, бросьте в корзину яблоко.\n")
+        append("Если исходный набор пуст, бросьте в корзину нектарин. Как проверить:")
+        withStyle(mono) { append("\nif (fruits.isNotEmpty()) ... else ...") }
+    }, 7, 200),
+
+    CompSize(Chapter.Conditions,"Проверить размер набора (size)", {
+        Fruits.random(Random.nextInt(3, 8)).let {
+            val c = if (it.size >= 5) Apple else Nectarine
+            Triple(listOf(listOf(c)), it, "9${c.ordinal}")
+        }
+    }, AnnotatedString(
+        "Если в исходном наборе есть хотя бы 5 фруктов (fruits.size), бросьте в корзину яблоко, иначе нектарин"
+    ), 7, 200),
+
+    CompFirst(Chapter.Conditions,"Проверить первый элемент (first)", {
+        Fruits.random(Random.nextInt(6)).let {
+            val c = if (it.firstOrNull() != Banana) Apple else Nectarine
+            Triple(listOf(listOf(c)), it, "9${c.ordinal}")
+        }
+    }, AnnotatedString(
+        "Если первый (first) фрукт в наборе не банан, бросьте в корзину яблоко, иначе нектарин\n\n" +
+        "Если возникает ошибка «Список пуст», попробуйте заменить first на firstOrNull"), 7, 200),
+
+    FirstLastColor(Chapter.Conditions,"Сравнить первый и последний (first, last)", {
+        Fruits.random(Random.nextInt(3, 8)).let {
+            val c = if (it.firstOrNull()?.color == it.lastOrNull()?.color) Apple else Nectarine
+            Triple(listOf(listOf(c)), it, "9${c.ordinal}")
+        }
+    }, AnnotatedString(
+        "Если первый и последний фрукты в наборе одного цвета, бросьте в корзину яблоко, иначе нектарин\n\n" +
+        "Если возникает ошибка «Список пуст», попробуйте использовать firstOrNull()? и lastOrNull()?"), 7, 200),
+
+    Contains(Chapter.Conditions,"Присутствие в наборе (contains)", {
+        Fruits.random(Random.nextInt(8, 16)).let {
+            val c = if (it.contains(Banana)) Apple else Nectarine
+            Triple(listOf(listOf(c)), it, "9${c.ordinal}")
+        }
+    }, buildAnnotatedString {
+        append("Если в наборе есть хоть один банан, бросьте в корзину яблоко, иначе нектарин:")
+        withStyle(mono) { append("\nfruits.contains(Banana)") }
+    }, 7, 200),
+
+    In(Chapter.Conditions,"Присутствие в наборе (in)", {
+        Fruits.random(Random.nextInt(8, 16)).let {
+            val c = if (Banana in it) Apple else Nectarine
+            Triple(listOf(listOf(c)), it, "9${c.ordinal}")
+        }
+    }, buildAnnotatedString {
+        append("Та же задача, но ещё более простой способ:")
+        withStyle(mono) { append("\nBanana in fruits") }
+    }, 7, 200),
+
+    Any(Chapter.Conditions,"Наличие в наборе (any)", {
+        Fruits.random(Random.nextInt(8, 16)).let {
+            val c = if (it.any { f -> f == Banana }) Apple else Nectarine
+            Triple(listOf(listOf(c)), it, "9${c.ordinal}")
+        }
+    }, buildAnnotatedString {
+        append("Та же задача, третий способ решения:")
+        withStyle(mono) { append("\nfruits.any { it == Banana }") }
+    }, 7, 200),
+
+    None(Chapter.Conditions,"Отсутствие в наборе (none)", {
+        Fruits.random(Random.nextInt(8, 16)).let {
+            val c = if (it.none { f -> f == Banana }) Apple else Nectarine
+            Triple(listOf(listOf(c)), it, "9${c.ordinal}")
+        }
+    }, AnnotatedString(
+        "Если в наборе нет ни одного банана (none), бросьте в корзину яблоко, иначе нектарин"
+    ), 7, 200),
+
+    All(Chapter.Conditions,"Полное заполнение набора (all)", {
+        (Fruits.random(Random.nextInt(3)) + List(Random.nextInt(1,4)) { Banana }).let {
+            val c = if (it.all { f -> f == Banana }) Apple else Nectarine
+            Triple(listOf(listOf(c)), it, "9${c.ordinal}")
+        }
+    }, AnnotatedString(
+        "Если весь набор состоит из одних бананов (all), бросьте в корзину яблоко, иначе нектарин"
+    ), 7, 200),
+
+    Count(Chapter.Conditions,"Количество в наборе (count)", {
+        Fruits.random(Random.nextInt(12, 16)).let {
+            val c = if (it.count { f -> f == Banana } == 1) Apple else Nectarine
+            Triple(listOf(listOf(c)), it, "9${c.ordinal}")
+        }
+    }, AnnotatedString(
+        "Если в наборе есть ровно один банан (count), бросьте в корзину яблоко, иначе нектарин.\n\n" +
+        "Подсказка: сравните результат функции с единицей"
+    ), 7, 200),
+
+    Yellow(Chapter.Conditions,"Количество жёлтых фруктов (самостоятельно)", {
+        Fruits.random(Random.nextInt(12, 16)).let {
+            val f = List(it.count { f -> f.color == Color.Yellow }) { Apple }
+            Triple(listOf(f), it, f.ordinals("9"))
+        }
+    }, AnnotatedString("Бросьте в корзину столько яблок, сколько всего жёлтых фруктов в исходном наборе"), 7, 55),
+
+    MinMax(Chapter.Conditions,"Наименьший и наибольший по номеру (min, max)", {
+        Fruits.random(Random.nextInt(3, 8)).let {
+            Triple(listOf(listOf(it.min(), it.max())), it, listOf(it.min(), it.max()).ordinals("9"))
+        }
+    }, AnnotatedString("Положите в корзину наименьший и наибольший по номеру в прейскуранте фрукты.\n\n" +
+            "Используйте функции-расширения .min() и .max(), добавьте ещё одни () для помещения фрукта в корзину"), 7, 200),
+
+    MinMaxBy(Chapter.Conditions,"Наименьший и наибольший по ... (minBy, maxBy)", {
+        Fruits.random(Random.nextInt(3, 8)).let { f ->
+            Triple(listOf(listOf(f.minBy { it.size }, f.maxBy { it.size })), f,
+                listOf(f.minBy { it.size }, f.maxBy { it.size }).ordinals("9"))
+        }
+    }, AnnotatedString("Положите в корзину наименьший (minBy) и наибольший (maxBy) по размеру (it.size) фрукты.\n\n" +
+            "Добавьте ещё одни () после блока {...} функции-расширения для помещения фрукта в корзину"), 7, 200),
 
     ;
     companion object {

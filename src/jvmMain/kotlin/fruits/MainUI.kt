@@ -54,7 +54,7 @@ fun mainUI(app: @Composable (Lessons, List<Fruit>)->Unit) = application {
         }
     }
     Window(::exitApplication, state,
-        title = name?.let { "Фрукты Котлина 0.1. Задание выполнил(и): $it" } ?: "Введите имя",
+        title = name?.let { "Фрукты Котлина 0.2. Задание выполнил(и): $it" } ?: "Введите имя",
         icon = painterResource(Fruit.Apple.file),
         resizable = false
     ) {
@@ -78,8 +78,13 @@ fun mainUI(app: @Composable (Lessons, List<Fruit>)->Unit) = application {
                 LazyColumn(Modifier.align(Alignment.Center)) {
                     item {
                         Text(buildAnnotatedString {
-                            append("Работа ")
-                            withStyle(SpanStyle(textDecoration = TextDecoration.LineThrough)) { append("с фруктами") }
+                            withStyle(SpanStyle(Color.LightGray, textDecoration = TextDecoration.LineThrough)) {
+                                append("Не")
+                            }
+                            append("серьёзный тренажёр.\nРабота ")
+                            withStyle(SpanStyle(Color.LightGray, textDecoration = TextDecoration.LineThrough)) {
+                                append("с фруктами")
+                            }
                             append(" со списками на языке Kotlin")
                         },  Modifier.width(500.dp).padding(bottom = 8.dp),
                             Color.Gray, 20.sp, textAlign = TextAlign.Center
@@ -172,7 +177,7 @@ fun mainUI(app: @Composable (Lessons, List<Fruit>)->Unit) = application {
                 }
             }
             val titleBack by animateColorAsState(
-                if (!correct && fruitBowl.isNotEmpty()) MaterialTheme.colors.error
+                if (!correct && (fruitBowl - 9).isNotEmpty()) MaterialTheme.colors.error
                 else if (saved || correct && cycle == less.tries) Color(0xFF008040)
                 else Color.White
             )
