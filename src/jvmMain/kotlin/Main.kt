@@ -65,6 +65,16 @@ fun main() = mainUI { lesson, input ->
             Lessons.Yellow -> Basket { repeat (input.count { it.color == Color.Yellow }) { Apple() } }
             Lessons.MinMax -> Basket { input.min()() ; input.max()() }
             Lessons.MinMaxBy -> Basket { input.minBy { it.size }() ; input.maxBy { it.size }() }
+            Lessons.Minus -> Basket { (input - Apple - Cherry - Cherry).forEach { it() } }
+            Lessons.ReplaceBanana -> Basket { input.forEach { if (it == Banana) Strawberry() else it() } }
+            Lessons.ReplaceYellow -> Basket { input.forEach { if (it.color == Color.Yellow) Strawberry() else it() } }
+            Lessons.Odd -> Basket { input.forEachIndexed { index, fruit -> if (index%2 == 0) fruit() } }
+            Lessons.EvenRed -> Basket {
+                input.forEachIndexed { index, fruit -> if (index%2 != 0 && fruit.color == Color.Red) fruit() }
+            }
+            Lessons.YellowOdd -> Basket {
+                input.filter { it.color == Color.Yellow } .forEachIndexed { index, fruit -> if (index%2 == 0) fruit() }
+            }
             else -> {}
         }
 }

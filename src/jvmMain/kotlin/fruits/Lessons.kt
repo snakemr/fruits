@@ -14,7 +14,8 @@ enum class Chapter(val title: String) {
     About("Введение"),
     Cycles("Циклы"),
     Lists("Обработка списков"),
-    Conditions("Условия")
+    Conditions("Условия"),
+    Complex("Сложные выражения")
     ;
     companion object {
         val values: List<Chapter> = Chapter.values().toList()
@@ -62,7 +63,7 @@ enum class Lessons(
     }, buildAnnotatedString {
             append("Положите в корзину все фрукты из случайного набора fruits, используя функцию-расширение forEach:")
             withStyle(mono) { append("\nfruits.forEach { it() }") }
-        }, 3, 55
+        }, 3, 54
     ),
 
     Separate(Chapter.Cycles, "По разным корзинам", {
@@ -81,7 +82,7 @@ enum class Lessons(
         listOf(Fruits.of("222222222222222"), Fruits.of("4444"), Fruits.of("77")).let { f ->
             Triple(f, emptyList(), f.joinToString("") { it.ordinals("9") })
         }
-    }, AnnotatedString("Разложите по разным корзинам 15 черешен, четыре лимона и два арбуза"), size = 55),
+    }, AnnotatedString("Разложите по разным корзинам 15 черешен, четыре лимона и два арбуза"), size = 54),
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -139,7 +140,7 @@ enum class Lessons(
     }, buildAnnotatedString {
         append("Кладите в корзину фрукты, пока не попадётся первый арбуз:")
         withStyle(mono) { append("\nfruits.takeWhile { it != Fruit.Watermelon }.forEach...") }
-    }, 3, 55),
+    }, 3, 54),
 
     DropWhile(Chapter.Lists, "Ждём, пока не найдём первый лимон (dropWhile)", {
         Fruits.random(Random.nextInt(10,16)).let { f ->
@@ -176,20 +177,20 @@ enum class Lessons(
     }, buildAnnotatedString {
         append("Отсортируйте фрукты в наборе согласно их номеру по прейскуранту (порядок как в задании №2):")
         withStyle(mono) { append("\nfruits.sorted()...") }
-    }, 3, 55),
+    }, 3, 54),
 
     SortedBy(Chapter.Lists, "Упорядочивание фруктов по цвету (sortedBy)", {
         Fruits.random(Random.nextInt(10,16)).let { f ->
             Triple(listOf(f.sortedBy { it.color.value }), f, f.sortedBy { it.color.value }.ordinals("9"))
         }
-    }, AnnotatedString("Отсортируйте фрукты в наборе по цвету (sortedBy, сравнивайте их it.color.value)"), 3, 55),
+    }, AnnotatedString("Отсортируйте фрукты в наборе по цвету (sortedBy, сравнивайте их it.color.value)"), 3, 54),
 
     SortedByDescending(Chapter.Lists, "Обратный порядок по размеру (sortedByDescending)", {
         Fruits.random(Random.nextInt(10,16)).let { f ->
             Triple(listOf(f.sortedByDescending { it.size }), f, f.sortedByDescending { it.size }.ordinals("9"))
         }
     }, AnnotatedString("Положите фрукты в корзину, чтобы они не подавились, сначала крупные, в конце – мелкие\n" +
-            "(sortedByDescending, сравнивайте их it.size)"), 3, 55),
+            "(sortedByDescending, сравнивайте их it.size)"), 3, 54),
 
     Distinct(Chapter.Lists, "Всё по одной штучке, пожалуйста (distinct)", {
         Fruits.random(Random.nextInt(10,16)).let {
@@ -234,7 +235,7 @@ enum class Lessons(
     }, buildAnnotatedString {
         append("Положите арбузы в одну корзину, а остальные фрукты – в другую:")
         withStyle(mono) { append("\nfruits.partition { it.size == Size.Big }.toList()...") }
-    }, 3, 55),
+    }, 3, 54),
 
     Map(Chapter.Lists, "Всё на клубнику (map)", {
         Fruits.random(Random.nextInt(10,16)).let {
@@ -243,7 +244,7 @@ enum class Lessons(
     }, buildAnnotatedString {
         append("Поменяйте все фрукты на клубнику:")
         withStyle(mono) { append("\nfruits.map { Strawberry }...") }
-    }, 3, 55),
+    }, 3, 54),
 
     Add(Chapter.Lists, "И ещё яблочко (+)", {
         Fruits.random(7).filter { it != Apple }.let {
@@ -261,11 +262,11 @@ enum class Lessons(
     }, buildAnnotatedString {
         append("Добавьте к набору фруктов ещё 8 черешен:")
         withStyle(mono) { append("\n(fruits + List(8){ Cherry })...") }
-    }, 3, 55),
+    }, 3, 54),
 
     Double(Chapter.Lists, "Удвоить набор (+)", {
         Fruits.random(Random.nextInt(5,8)).let { Triple(listOf(it+it), it, (it+it).ordinals("9")) }
-    }, AnnotatedString("Удвойте набор фруктов"), 3, 55),
+    }, AnnotatedString("Удвойте набор фруктов"), 3, 54),
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -370,7 +371,7 @@ enum class Lessons(
             val f = List(it.count { f -> f.color == Color.Yellow }) { Apple }
             Triple(listOf(f), it, f.ordinals("9"))
         }
-    }, AnnotatedString("Бросьте в корзину столько яблок, сколько всего жёлтых фруктов в исходном наборе"), 7, 55),
+    }, AnnotatedString("Бросьте в корзину столько яблок, сколько всего жёлтых фруктов в исходном наборе"), 7, 54),
 
     MinMax(Chapter.Conditions,"Наименьший и наибольший по номеру (min, max)", {
         Fruits.random(Random.nextInt(3, 8)).let {
@@ -386,6 +387,62 @@ enum class Lessons(
         }
     }, AnnotatedString("Положите в корзину наименьший (minBy) и наибольший (maxBy) по размеру (it.size) фрукты.\n\n" +
             "Добавьте ещё одни () после блока {...} функции-расширения для помещения фрукта в корзину"), 7, 200),
+
+    Minus(Chapter.Conditions,"Если отнять яблоко... (-)", {
+        Fruits.random(Random.nextInt(8, 16)).let {
+            Triple(listOf(it-Apple-Cherry-Cherry), it, (it-Apple-Cherry-Cherry).ordinals("9"))
+        }
+    }, AnnotatedString("Заберите себе одно яблоко и две черешни, если они есть, остальное положите в корзину.\n\n" +
+            "Используйте знак минус для вычитания фрукта из набора (или элемента из списка)"), 7, 54),
+
+    ReplaceBanana(Chapter.Conditions,"Замена бананов (map)", {
+        Fruits.random(Random.nextInt(12, 16)).let { f ->
+            val b = f.map { if (it == Banana) Strawberry else it }
+            Triple(listOf(b), f, b.ordinals("9"))
+        }
+    }, AnnotatedString("Замените в наборе все бананы на клубнику, и положите новый набор в корзину.\n\n" +
+            "Используйте проверку на банан в цикле forEach, либо предварительно замените их в map{...} "), 7, 54),
+
+    ReplaceYellow(Chapter.Conditions,"Замена всех жёлтых фруктов (map)", {
+        Fruits.random(Random.nextInt(12, 16)).let { f ->
+            val b = f.map { if (it.color == Color.Yellow) Strawberry else it }
+            Triple(listOf(b), f, b.ordinals("9"))
+        }
+    }, AnnotatedString("Замените в наборе все жёлтые фрукты на клубнику, и положите новый набор в корзину"), 7, 54),
+
+    Odd(Chapter.Conditions,"Нечётные фрукты (forEachIndexed)", {
+        Fruits.random(Random.nextInt(8, 16)).let { f ->
+            val b = f.filterIndexed { index, _ -> index%2 == 0 }
+            Triple(listOf(b), f, b.ordinals("9"))
+        }
+    }, buildAnnotatedString {
+        append("Положите в корзину только нечётные фрукты:")
+        withStyle(mono) { append("\nfruits.forEachIndexed { index, fruit -> if (index%2 == 0) fruit() }") }
+    }, 7, 54),
+
+    EvenRed(Chapter.Conditions,"Чётные красные фрукты (forEachIndexed)", {
+        Fruits.random(Random.nextInt(12, 16)).let { f ->
+            val b = f.filterIndexed { index, fruit -> index%2 != 0 && fruit.color == Color.Red }
+            Triple(listOf(b), f, b.ordinals("9"))
+        }
+    }, AnnotatedString("Положите в корзину только чётные фрукты, которые являются при этом красными"), 7, 54),
+
+    YellowOdd(Chapter.Conditions,"Жёлтые нечётные фрукты (filter, forEachIndexed)", {
+        Fruits.random(Random.nextInt(12, 16)).let { f ->
+            val b = f.filter { it.color == Color.Yellow }.filterIndexed { index, _ -> index%2 == 0 }
+            Triple(listOf(b), f, b.ordinals("9"))
+        }
+    }, AnnotatedString("Отберите сначала все жёлтые фрукты, и положите в корзину только нечётные из них"), 7, 54),
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    Rare(Chapter.Complex,"Самый редкий", {
+        Fruits.random(Random.nextInt(12, 16)).let { fr ->
+            val counts = fr.groupBy { it }.map { it.key to it.value.size }.toMap()
+            val rare = counts.minBy { it.value }.key
+            Triple(listOf(listOf(rare)), fr, listOf(rare).ordinals("9"))
+        }
+    }, AnnotatedString("Замените в наборе все жёлтые фрукты на клубнику, и положите новый набор в корзину"), 7, 54),
 
     ;
     companion object {
